@@ -1,0 +1,54 @@
+{% extends 'tracker/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="min-h-screen flex flex-col justify-center items-center px-6 text-center bg-gradient-to-br from-pink-200 via-yellow-100 to-blue-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-all duration-700">
+  <h1 class="text-6xl md:text-7xl font-extrabold text-gray-900 dark:text-white leading-tight drop-shadow-lg mb-6">
+    Master Your Calories,<br> Own Your Health
+  </h1>
+  <p class="text-xl md:text-2xl text-gray-700 dark:text-gray-300 max-w-3xl mb-10">
+    Log your meals, estimate calories, and visualize progress—your journey to a healthier lifestyle starts here.
+  </p>
+  <a href="{% url 'register' %}" class="inline-block bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-indigo-600 hover:to-purple-600 text-white font-bold text-lg px-10 py-4 rounded-full shadow-xl transform hover:scale-105 transition duration-300">
+    Get Started for Free
+  </a>
+</section>
+
+<!-- Features Section -->
+<section class="py-24 px-6 bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 transition-all duration-700">
+  <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-12">
+    
+    <!-- Feature -->
+    <div class="bg-white dark:bg-gray-700 text-gray-800 dark:text-white p-8 rounded-3xl shadow-2xl hover:shadow-3xl transition duration-300 transform hover:-translate-y-2 border border-gray-200 dark:border-gray-600">
+      <h3 class="text-3xl font-bold text-indigo-700 dark:text-indigo-300 mb-4">Calorie Estimator</h3>
+      <p class="text-base">Quickly estimate how many calories your body needs daily based on your profile.</p>
+    </div>
+
+    <!-- Feature -->
+    <div class="bg-white dark:bg-gray-700 text-gray-800 dark:text-white p-8 rounded-3xl shadow-2xl hover:shadow-3xl transition duration-300 transform hover:-translate-y-2 border border-gray-200 dark:border-gray-600">
+      <h3 class="text-3xl font-bold text-purple-700 dark:text-purple-300 mb-4">Food Logging</h3>
+      <p class="text-base">Add your daily food entries and track what you eat in real time.</p>
+    </div>
+
+    <!-- Feature -->
+    <div class="bg-white dark:bg-gray-700 text-gray-800 dark:text-white p-8 rounded-3xl shadow-2xl hover:shadow-3xl transition duration-300 transform hover:-translate-y-2 border border-gray-200 dark:border-gray-600">
+      <h3 class="text-3xl font-bold text-pink-700 dark:text-pink-300 mb-4">Personal Dashboard</h3>
+      <p class="text-base">Visualize your progress and see your stats all in one place.</p>
+    </div>
+    
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-gradient-to-r from-indigo-600 to-purple-700 dark:from-gray-900 dark:to-gray-800 text-white text-center py-8 transition-all duration-500">
+  <p class="mb-2">&copy; 2025 Calorie Tracker. All rights reserved.</p>
+  <div class="space-x-4">
+    <a href="#" class="hover:underline">Privacy Policy</a>
+    <a href="#" class="hover:underline">Terms of Service</a>
+    <a href="#" class="hover:underline">Contact</a>
+  </div>
+</footer>
+
+{% endblock %}

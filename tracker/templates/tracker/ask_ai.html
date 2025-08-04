@@ -1,0 +1,9 @@
+<form method="post">
+    {% csrf_token %}
+    <input type="text" name="question" placeholder="Ask anything..." required>
+    <button type="submit">Ask</button>
+</form>
+
+{% if answer %}
+    <p><strong>Answer:</strong> {{ answer }}</p>
+{% endif %}

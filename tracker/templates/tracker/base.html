@@ -1,0 +1,159 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="transition duration-300">
+<head>
+  <meta charset="UTF-8" />
+  <title>{% block title %}Calorie Tracker{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Tailwind CSS -->
+  <link rel="stylesheet" href="{% static 'src/output.css' %}" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="{% static 'favicon.png' %}" />
+
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white pt-20 transition-colors duration-300">
+
+<!-- Navbar -->
+<nav class="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-indigo-600 to-purple-700 dark:from-gray-800 dark:to-gray-900 shadow-lg text-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+      <!-- Logo -->
+      <a href="{% url 'dashboard' %}" class="text-xl font-extrabold tracking-tight hover:text-yellow-400 transition duration-300">
+        Calorie Tracker
+      </a>
+
+      <!-- Desktop Nav -->
+      <div class="hidden md:flex items-center space-x-6">
+        <a href="{% url 'home' %}" class="{% if request.resolver_match.url_name == 'home' %}text-yellow-400 font-semibold{% else %}hover:text-yellow-300{% endif %}">Home</a>
+
+        {% if user.is_authenticated %}
+          <a href="{% url 'dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}text-yellow-400 font-semibold{% else %}hover:text-yellow-300{% endif %}">Dashboard</a>
+          <a href="{% url 'edit_profile' %}" class="{% if request.resolver_match.url_name == 'edit_profile' %}text-yellow-400 font-semibold{% else %}hover:text-yellow-300{% endif %}">Edit Profile</a>
+          <a href="{% url 'calorie_estimator' %}" class="{% if request.resolver_match.url_name == 'calorie_estimator' %}text-yellow-400 font-semibold{% else %}hover:text-yellow-300{% endif %}">Calorie Estimator</a>
+          <a href="{% url 'food_log' %}" class="{% if request.resolver_match.url_name == 'food_log' %}text-yellow-400 font-semibold{% else %}hover:text-yellow-300{% endif %}">Food Log</a>
+          <a href="{% url 'logout' %}" class="hover:text-yellow-300">Logout</a>
+        {% else %}
+          <a href="{% url 'login' %}" class="{% if request.resolver_match.url_name == 'login' %}text-yellow-400 font-semibold{% else %}hover:text-yellow-300{% endif %}">Login</a>
+          <a href="{% url 'register' %}" class="{% if request.resolver_match.url_name == 'register' %}text-yellow-400 font-semibold{% else %}hover:text-yellow-300{% endif %}">Register</a>
+        {% endif %}
+
+        <!-- Night Mode Toggle -->
+        <button onclick="toggleTheme()" class="ml-4 flex items-center px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 transition text-sm" aria-label="Toggle Night Mode">
+          <svg id="theme-icon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="currentColor" viewBox="0 0 20 20">
+            <path id="theme-icon-path" d="M10 2a.75.75 0 01.75.75v1a.75.75 0 01-1.5 0v-1A.75.75 0 0110 2z" />
+          </svg>
+          Toggle Mode
+        </button>
+      </div>
+
+      <!-- Mobile menu toggle -->
+      <div class="md:hidden flex items-center">
+        <button id="menu-btn" class="focus:outline-none" aria-label="Toggle Mobile Menu">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Nav: Updated to vertical layout -->
+    <div id="mobile-menu" class="hidden flex flex-col py-4 space-y-3 md:hidden transition-all duration-300 ease-in-out">
+      <a href="{% url 'home' %}" class="px-4 py-2 hover:bg-white/10 rounded">Home</a>
+      {% if user.is_authenticated %}
+        <a href="{% url 'dashboard' %}" class="px-4 py-2 hover:bg-white/10 rounded">Dashboard</a>
+        <a href="{% url 'edit_profile' %}" class="px-4 py-2 hover:bg-white/10 rounded">Edit Profile</a>
+        <a href="{% url 'calorie_estimator' %}" class="px-4 py-2 hover:bg-white/10 rounded">Calorie Estimator</a>
+        <a href="{% url 'food_log' %}" class="px-4 py-2 hover:bg-white/10 rounded">Food Log</a>
+        <a href="{% url 'logout' %}" class="px-4 py-2 hover:bg-white/10 rounded">Logout</a>
+      {% else %}
+        <a href="{% url 'login' %}" class="px-4 py-2 hover:bg-white/10 rounded">Login</a>
+        <a href="{% url 'register' %}" class="px-4 py-2 hover:bg-white/10 rounded">Register</a>
+      {% endif %}
+      <button onclick="toggleTheme()" class="w-fit px-4 py-2 rounded bg-white/10 hover:bg-white/20">Toggle Night Mode</button>
+    </div>
+  </div>
+</nav>
+
+<!-- Page Content -->
+<main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 mb-12">
+  {% if messages %}
+  {% for message in messages %}
+  <div
+    class="mb-4 p-4 border-l-4 text-sm
+        {% if message.tags == 'success' %}
+          border-green-500 bg-green-100 text-green-800
+        {% elif message.tags == 'error' %}
+          border-red-500 bg-red-100 text-red-800
+        {% else %}
+          border-blue-500 bg-blue-100 text-blue-800
+        {% endif %}">
+    {{ message }}
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  {% block content %}{% endblock %}
+</main>
+
+<!-- Scripts -->
+<script>
+  const menuBtn = document.getElementById("menu-btn");
+  const mobileMenu = document.getElementById("mobile-menu");
+  const html = document.documentElement;
+  const themeIcon = document.getElementById("theme-icon");
+
+  // Mobile menu toggle
+  menuBtn.addEventListener("click", () => {
+    mobileMenu.classList.toggle("hidden");
+  });
+
+  // Close menu on outside click
+  document.addEventListener("click", function (event) {
+    if (!menuBtn.contains(event.target) && !mobileMenu.contains(event.target)) {
+      mobileMenu.classList.add("hidden");
+    }
+  });
+
+  // Theme toggle
+  function toggleTheme() {
+    html.classList.toggle("dark");
+    updateThemeIcon();
+    localStorage.setItem("theme", html.classList.contains("dark") ? "dark" : "light");
+  }
+
+  // Set initial theme
+  function setInitialTheme() {
+    if (
+      localStorage.theme === "dark" ||
+      (!localStorage.theme && window.matchMedia("(prefers-color-scheme: dark)").matches)
+    ) {
+      html.classList.add("dark");
+    } else {
+      html.classList.remove("dark");
+    }
+    updateThemeIcon();
+  }
+
+  // Update icon
+  function updateThemeIcon() {
+    if (html.classList.contains("dark")) {
+      themeIcon.innerHTML = `<path fill-rule="evenodd" d="M10 2a8 8 0 106.32 3.906A7 7 0 0110 2z" clip-rule="evenodd"/>`;
+    } else {
+      themeIcon.innerHTML = `<path d="M10 2a.75.75 0 01.75.75v1a.75.75 0 01-1.5 0v-1A.75.75 0 0110 2z"/>`;
+    }
+  }
+
+  setInitialTheme();
+</script>
+
+</body>
+</html>

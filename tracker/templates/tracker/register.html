@@ -1,0 +1,49 @@
+{% extends 'tracker/base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+<div class="flex items-center justify-center min-h-screen bg-gradient-to-br from-purple-100 via-pink-100 to-yellow-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-all duration-300">
+  <div class="w-full max-w-md bg-white dark:bg-gray-900 shadow-2xl rounded-3xl p-10 animate-fade-in">
+    <h2 class="text-4xl font-extrabold text-center text-pink-600 dark:text-pink-400 mb-8 hover:text-pink-700 transition duration-300">
+      📝 Register Your Account
+    </h2>
+    <form method="post" class="space-y-6">
+      {% csrf_token %}
+      <div class="space-y-5">
+        {% for field in form %}
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1 hover:text-pink-600 transition-colors duration-300">
+              {{ field.label_tag }} <span class="inline-block">✨</span>
+            </label>
+            {{ field|add_class:"w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-pink-500 dark:bg-gray-800 dark:text-white transition shadow-sm hover:shadow-lg" }}
+            {% if field.errors %}
+              <p class="text-red-500 text-xs mt-1 italic">{{ field.errors }}</p>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+      <div class="mt-8 flex justify-between items-center">
+        <button type="submit" 
+          class="flex items-center justify-center gap-2 px-8 py-3 bg-gradient-to-r from-pink-500 to-pink-700 text-white font-bold rounded-2xl hover:from-pink-600 hover:to-pink-800 shadow-lg transition duration-300 transform hover:scale-105">
+          <span>🚀 Register</span>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" >
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </button>
+        <a href="{% url 'login' %}" class="text-sm text-pink-600 hover:underline dark:text-pink-400">
+          Already have an account? Login
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+@keyframes fade-in {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fade-in 0.7s ease forwards;
+}
+</style>
+{% endblock %}

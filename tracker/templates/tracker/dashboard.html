@@ -1,0 +1,101 @@
+{% extends 'tracker/base.html' %}
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-all duration-500 px-6 py-12">
+
+  <div class="max-w-5xl mx-auto space-y-12">
+
+    <!-- Welcome -->
+    <h1 class="text-4xl font-extrabold text-gray-800 dark:text-white drop-shadow-md">
+      Welcome, {{ user.username }}!
+    </h1>
+
+    <!-- Profile Info -->
+    <section class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-xl border border-gray-200 dark:border-gray-700 transition">
+      <h2 class="text-2xl font-bold text-indigo-700 dark:text-indigo-300 mb-4">Your Profile Info</h2>
+      <ul class="space-y-2 text-gray-700 dark:text-gray-200">
+        <li><strong>Age:</strong> {{ profile.age }}</li>
+        <li><strong>Height:</strong> {{ profile.height }} cm</li>
+        <li><strong>Current Weight:</strong> {{ profile.current_weight }} kg</li>
+        <li><strong>Target Weight:</strong> {{ profile.target_weight }} kg</li>
+        <li><strong>Gender:</strong> {{ profile.gender|title }}</li>
+        <li><strong>Activity Level:</strong> {{ profile.activity_level|title }}</li>
+        <li><strong>Goal:</strong> {{ profile.goal|title }}</li>
+        <li><strong>Duration to reach target:</strong> 
+          {% if duration_days == 30 %}
+            1 Month
+          {% elif duration_days == 90 %}
+            3 Months
+          {% elif duration_days == 180 %}
+            6 Months
+          {% else %}
+            {{ duration_days }} days
+          {% endif %}
+        </li>
+      </ul>
+    </section>
+
+    <!-- Calorie Summary -->
+    <section class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-xl border border-gray-200 dark:border-gray-700 transition">
+      <h2 class="text-2xl font-bold text-purple-700 dark:text-purple-300 mb-4">Calorie Summary</h2>
+      <p class="mb-2 text-gray-800 dark:text-gray-200"><strong>BMR:</strong> {{ bmr }} kcal</p>
+      <p class="mb-2 text-gray-800 dark:text-gray-200"><strong>Maintenance:</strong> {{ maintenance }} kcal</p>
+      <p class="mb-2 text-gray-800 dark:text-gray-200"><strong>Daily Goal:</strong> {{ goal }} kcal</p>
+
+      <div class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+        {% if profile.goal == 'lose' %}
+          🔻 To lose weight, consume approx. <strong>{{ goal }}</strong> kcal/day.<br>
+          This means a daily calorie deficit of about <strong>{{ daily_calorie_change_abs|floatformat:0 }}</strong> kcal to reach your target in {{ duration_days }} days.
+        {% elif profile.goal == 'gain' %}
+          🔺 To gain weight, consume approx. <strong>{{ goal }}</strong> kcal/day.<br>
+          This means a daily calorie surplus of about <strong>{{ daily_calorie_change_abs|floatformat:0 }}</strong> kcal to reach your target in {{ duration_days }} days.
+        {% else %}
+          ☑ To maintain weight, consume approx. <strong>{{ goal }}</strong> kcal/day.
+        {% endif %}
+      </div>
+    </section>
+
+    <!-- Food Log Form -->
+    <section class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-xl border border-gray-200 dark:border-gray-700 transition">
+      <h2 class="text-2xl font-bold text-pink-700 dark:text-pink-300 mb-4">Log Your Food</h2>
+      <form method="post" class="space-y-5">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button
+          type="submit"
+          class="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-semibold px-6 py-2 rounded-xl shadow-lg transition-all"
+        >
+          Add Entry
+        </button>
+      </form>
+    </section>
+
+    <!-- Food Log -->
+    <section class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-xl border border-gray-200 dark:border-gray-700 transition">
+      <h2 class="text-2xl font-bold text-indigo-700 dark:text-indigo-300 mb-4">
+        Today's Food Log ({{ today|date:"F j, Y" }})
+      </h2>
+      {% if logs %}
+        <ul class="space-y-2 text-gray-700 dark:text-gray-300">
+          {% for log in logs %}
+            {% if log.date == today %}
+              <li>
+                <strong>{{ log.food.name }}</strong>: {{ log.quantity_in_grams }}g ({{ log.calories }} kcal)
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-gray-500 dark:text-gray-400">No entries for today yet.</p>
+      {% endif %}
+    </section>
+
+    <!-- Calorie Tracker -->
+    <section class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-xl border border-gray-200 dark:border-gray-700 transition">
+      <h2 class="text-2xl font-bold text-green-700 dark:text-green-300 mb-4">Calorie Tracker</h2>
+      <p class="text-gray-800 dark:text-gray-200"><strong>Total Consumed:</strong> {{ total }} kcal</p>
+      <p class="text-gray-800 dark:text-gray-200"><strong>Remaining:</strong> {{ remaining }} kcal</p>
+    </section>
+
+  </div>
+</div>
+{% endblock %}

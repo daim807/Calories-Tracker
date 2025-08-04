@@ -1,0 +1,41 @@
+{% extends 'tracker/base.html' %}
+{% block content %}
+<div class="max-w-5xl mx-auto mt-10 px-4 sm:px-6 lg:px-8">
+    <h2 class="text-3xl font-semibold text-gray-800 dark:text-white mb-6">📋 Your Food Log</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="mb-4 px-4 py-3 rounded-lg bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 shadow-sm transition-all duration-300">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if logs %}
+    <div class="overflow-x-auto rounded-lg shadow-lg border border-gray-300 dark:border-gray-700">
+        <table class="min-w-full bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 rounded-lg transition duration-300">
+            <thead>
+                <tr class="bg-indigo-100 dark:bg-indigo-800 text-indigo-700 dark:text-indigo-300 uppercase text-sm font-semibold tracking-wide">
+                    <th class="px-6 py-3 text-left">Date 📅</th>
+                    <th class="px-6 py-3 text-left">Food Item 🍲</th>
+                    <th class="px-6 py-3 text-left">Calories 🔥</th>
+                    <th class="px-6 py-3 text-left">Quantity (grams) ⚖️</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                    <tr class="border-t border-gray-300 dark:border-gray-700 hover:bg-indigo-50 dark:hover:bg-indigo-900 transition-colors duration-300 cursor-pointer">
+                        <td class="px-6 py-3 whitespace-nowrap">{{ log.date }}</td>
+                        <td class="px-6 py-3 whitespace-nowrap font-medium">{{ log.food.name }}</td>
+                        <td class="px-6 py-3 whitespace-nowrap">{{ log.calories }}</td>
+                        <td class="px-6 py-3 whitespace-nowrap">{{ log.quantity_in_grams }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <p class="text-center text-gray-600 dark:text-gray-400 mt-8 italic">No food entries logged yet. 🍽️ Start adding your meals!</p>
+    {% endif %}
+</div>
+{% endblock %}
